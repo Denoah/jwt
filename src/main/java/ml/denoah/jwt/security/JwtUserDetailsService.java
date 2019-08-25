@@ -3,6 +3,8 @@ package ml.denoah.jwt.security;
 import lombok.extern.slf4j.Slf4j;
 import ml.denoah.jwt.core.user.model.User;
 import ml.denoah.jwt.core.user.service.UserService;
+import ml.denoah.jwt.security.jwt.JwtUser;
+import ml.denoah.jwt.security.jwt.JwtUserFactory;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,7 +28,8 @@ public class JwtUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User with username = " + userName + " not found");
         }
 
-
-        return null;
+        JwtUser jwtUser = JwtUserFactory.create(user);
+        log.info("IN loadUserByUsername - user with username: {} successfully loaded", userName);
+        return jwtUser;
     }
 }

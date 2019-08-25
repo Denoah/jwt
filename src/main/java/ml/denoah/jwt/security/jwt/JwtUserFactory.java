@@ -1,7 +1,14 @@
 package ml.denoah.jwt.security.jwt;
 
 import ml.denoah.jwt.core.main.model.Status;
+import ml.denoah.jwt.core.role.model.Role;
 import ml.denoah.jwt.core.user.model.User;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public final class JwtUserFactory {
 
@@ -18,7 +25,13 @@ public final class JwtUserFactory {
                 user.getEmail(),
                 user.getStatus().equals(Status.ACTIVE),
                 user.getUpdated(),
-                null
+                mapToGrantedAuthorities(new ArrayList<>(user.getRoles()))
         );
+    }
+
+    private static List<GrantedAuthority> mapToGrantedAuthorities(List<Role> userRoles) {
+        return userRoles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName())
+                ).collect(Collectors.toList());
     }
 }
